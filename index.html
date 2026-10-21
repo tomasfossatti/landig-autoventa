@@ -1,0 +1,1242 @@
+<!DOCTYPE html>
+<html lang="es-AR" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AutoVenta APP | Infraestructura Digital y Catálogo Web B2B para Agencias y Revendedores</title>
+  <meta name="description" content="La plataforma digital integral para agencias de autos, lotes de seminuevos y revendedores en Argentina. Lanzamiento exclusivo: Catálogo Web B2B propio, Radar IA de Oportunidades y Filtro WhatsApp Anticuriosos.">
+  
+  <!-- Favicon SVG -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230066FF' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2'/><circle cx='7' cy='17' r='2'/><path d='M9 17h6'/><circle cx='17' cy='17' r='2'/></svg>">
+
+  <!-- Google Fonts: Plus Jakarta Sans & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              black: '#090D14',
+              surface: '#111726',
+              surfaceLight: '#182136',
+              card: 'rgba(17, 23, 38, 0.75)',
+              border: 'rgba(255, 255, 255, 0.08)',
+              borderHighlight: 'rgba(0, 102, 255, 0.35)',
+              blue: '#0066FF',
+              blueGlow: '#0052cc',
+              blueLight: '#3385ff',
+              cyan: '#00D8F6',
+              green: '#00E676',
+              greenDark: '#00A352',
+              silver: '#94A3B8',
+              muted: '#64748B'
+            }
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace']
+          },
+          boxShadow: {
+            'glow-blue': '0 0 40px -10px rgba(0, 102, 255, 0.45)',
+            'glow-cyan': '0 0 40px -10px rgba(0, 216, 246, 0.35)',
+            'glow-green': '0 0 30px -8px rgba(0, 230, 118, 0.4)',
+            'card-elevated': '0 20px 40px -15px rgba(0, 0, 0, 0.6)'
+          },
+          keyframes: {
+            pulseGlow: {
+              '0%, 100%': { opacity: '0.4', transform: 'scale(1)' },
+              '50%': { opacity: '0.8', transform: 'scale(1.05)' }
+            },
+            radarSweep: {
+              '0%': { transform: 'rotate(0deg)' },
+              '100%': { transform: 'rotate(360deg)' }
+            },
+            floatSlow: {
+              '0%, 100%': { transform: 'translateY(0px)' },
+              '50%': { transform: 'translateY(-8px)' }
+            }
+          },
+          animation: {
+            'pulse-glow': 'pulseGlow 6s ease-in-out infinite',
+            'radar-sweep': 'radarSweep 4s linear infinite',
+            'float': 'floatSlow 4s ease-in-out infinite'
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      background-color: #070A10;
+      color: #E2E8F0;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      overflow-x: hidden;
+      selection-background-color: #0066FF;
+      selection-color: #FFFFFF;
+    }
+
+    /* Ambient Tech Gradients */
+    .bg-grid-pattern {
+      background-size: 40px 40px;
+      background-image: 
+        linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    }
+
+    .badge-shimmer {
+      background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0) 100%);
+      background-size: 200% 100%;
+      animation: shimmer 3s infinite;
+    }
+
+    @keyframes shimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+
+    /* Glassmorphism */
+    .glass-panel {
+      background: rgba(15, 23, 42, 0.65);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+    }
+
+    .glass-card {
+      background: linear-gradient(135deg, rgba(24, 33, 54, 0.7) 0%, rgba(13, 19, 33, 0.8) 100%);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .glass-card:hover {
+      border-color: rgba(0, 102, 255, 0.4);
+      transform: translateY(-3px);
+      box-shadow: 0 15px 35px -10px rgba(0, 102, 255, 0.25);
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #090D14;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #1E293B;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #0066FF;
+    }
+  </style>
+</head>
+<body class="bg-brand-black text-slate-100 antialiased min-h-screen relative flex flex-col justify-between">
+
+  <!-- Ambient Glow Backgrounds -->
+  <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+    <div class="absolute -top-40 left-1/2 -translate-x-1/2 w-[900px] h-[550px] bg-brand-blue/15 rounded-full blur-[140px] animate-pulse-glow"></div>
+    <div class="absolute top-[35%] -left-48 w-[600px] h-[600px] bg-brand-cyan/10 rounded-full blur-[160px]"></div>
+    <div class="absolute top-[65%] -right-48 w-[650px] h-[650px] bg-brand-green/10 rounded-full blur-[160px]"></div>
+    <div class="absolute inset-0 bg-grid-pattern opacity-40"></div>
+  </div>
+
+  <!-- NAVIGATION HEADER -->
+  <header class="sticky top-0 z-50 glass-panel border-b border-brand-border">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      
+      <!-- Logo -->
+      <a href="#" class="flex items-center gap-3 group">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-blue to-brand-cyan flex items-center justify-center shadow-glow-blue">
+          <i data-lucide="car" class="w-5 h-5 text-white stroke-[2.5]"></i>
+        </div>
+        <div>
+          <div class="flex items-center gap-1.5">
+            <span class="text-xl font-extrabold tracking-tight text-white">AutoVenta<span class="text-brand-cyan">APP</span></span>
+            <span class="text-[10px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded bg-brand-blue/20 text-brand-blue border border-brand-blue/30">B2B</span>
+          </div>
+          <span class="text-[11px] block font-mono text-slate-400 font-medium">ARGENTINA 🇦🇷</span>
+        </div>
+      </a>
+
+      <!-- Desktop Nav -->
+      <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-300">
+        <a href="#catalogo-web" class="hover:text-brand-cyan transition-colors flex items-center gap-1.5">
+          <span class="w-1.5 h-1.5 rounded-full bg-brand-cyan animate-pulse"></span>
+          Nuevo: Catálogo Web
+        </a>
+        <a href="#pilares-tecnologicos" class="hover:text-white transition-colors">Suite Integral</a>
+        <a href="#comparativa" class="hover:text-white transition-colors">Antes vs Ahora</a>
+        <a href="#faqs" class="hover:text-white transition-colors">Preguntas Frecuentes</a>
+      </nav>
+
+      <!-- Action Buttons -->
+      <div class="flex items-center gap-3">
+        <!-- WhatsApp Direct CTA -->
+        <a href="https://wa.me/5491123456789?text=Hola!%20Quiero%20conocer%20m%C3%A1s%20sobre%20AutoVenta%20APP%20y%20el%20nuevo%20Cat%C3%A1logo%20Web%20B2B" 
+           target="_blank" 
+           rel="noopener noreferrer"
+           class="hidden sm:inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500/20 transition-all">
+          <i data-lucide="message-circle" class="w-4 h-4 text-emerald-400"></i>
+          <span>Consultar por WhatsApp</span>
+        </a>
+
+        <!-- Main Demo Modal Trigger -->
+        <button onclick="openDemoModal()" 
+                class="inline-flex items-center gap-2 px-4 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-brand-blue hover:bg-brand-blueLight text-white shadow-glow-blue transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98]">
+          <i data-lucide="play" class="w-3.5 h-3.5 fill-current"></i>
+          <span>Ver Demostración</span>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- MAIN CONTENT CONTAINER -->
+  <main class="relative z-10">
+
+    <!-- 1. HEADER & HERO SECTION -->
+    <section class="relative pt-12 pb-20 md:pt-20 md:pb-32 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-center">
+      
+      <!-- Top B2B Tagline Pill -->
+      <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-panel border border-brand-borderHighlight mb-6 text-xs sm:text-sm text-slate-300 font-mono">
+        <span class="flex h-2 w-2 rounded-full bg-emerald-400"></span>
+        <span class="text-brand-cyan font-bold tracking-wide">INFRAESTRUCTURA DIGITAL</span>
+        <span class="text-slate-500">|</span>
+        <span class="text-slate-300 font-medium">AGENCIAS Y REVENDEDORES EN ARGENTINA</span>
+      </div>
+
+      <!-- Main Headline (H1) -->
+      <h1 class="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-white max-w-5xl mx-auto leading-[1.12]">
+        Transformá tu Negocio Automotor con 
+        <span class="bg-gradient-to-r from-brand-blue via-brand-cyan to-white bg-clip-text text-transparent">
+          Inteligencia Artificial
+        </span> 
+        y tu propio <span class="underline decoration-brand-cyan/60 decoration-wavy decoration-2">Catálogo Web</span>
+      </h1>
+
+      <!-- Subtitle -->
+      <p class="mt-6 text-base sm:text-lg md:text-xl text-slate-300 max-w-3xl mx-auto font-normal leading-relaxed">
+        Controlá tu inventario, detectá oportunidades de compra por debajo del mercado con <strong class="text-white font-semibold">Radar IA</strong> y mostrá tu stock al mundo con tu propio <strong class="text-brand-cyan font-semibold">Catálogo Web profesional</strong>.
+      </p>
+
+      <!-- CTAs & Microcopy -->
+      <div class="mt-8 sm:mt-10 flex flex-col sm:flex-row items-center justify-center gap-4 max-w-md mx-auto sm:max-w-none">
+        <button onclick="openDemoModal()" 
+                class="w-full sm:w-auto px-8 py-4 rounded-xl text-base font-bold bg-brand-blue hover:bg-brand-blueLight text-white shadow-glow-blue transition-all duration-300 flex items-center justify-center gap-3 transform hover:-translate-y-0.5 active:translate-y-0">
+          <i data-lucide="monitor-play" class="w-5 h-5"></i>
+          <span>VER DEMOSTRACIÓN EN VIVO</span>
+        </button>
+
+        <a href="https://wa.me/5491123456789?text=Hola!%20Quiero%20solicitar%20un%20diagn%C3%B3stico%20gratuito%20para%20mi%20agencia/stock%20con%20AutoVenta%20APP" 
+           target="_blank" 
+           rel="noopener noreferrer"
+           class="w-full sm:w-auto px-8 py-4 rounded-xl text-base font-semibold bg-slate-900/80 hover:bg-slate-800 text-slate-200 border border-slate-700/60 hover:border-emerald-500/50 flex items-center justify-center gap-3 transition-all duration-300">
+          <i data-lucide="message-square" class="w-5 h-5 text-emerald-400"></i>
+          <span>CONSULTAR POR WHATSAPP</span>
+        </a>
+      </div>
+
+      <!-- Trust Micro-Copy -->
+      <div class="mt-8 flex flex-wrap items-center justify-center gap-y-2 gap-x-6 text-xs sm:text-sm font-medium text-slate-400">
+        <span class="inline-flex items-center gap-1.5 text-amber-400">
+          <i data-lucide="zap" class="w-4 h-4 fill-amber-400 text-amber-400"></i>
+          Diseñado para el mercado argentino
+        </span>
+        <span class="hidden sm:inline text-slate-700">•</span>
+        <span class="inline-flex items-center gap-1.5 text-slate-300">
+          <i data-lucide="percent" class="w-4 h-4 text-brand-cyan"></i>
+          Sin comisiones por venta
+        </span>
+        <span class="hidden sm:inline text-slate-700">•</span>
+        <span class="inline-flex items-center gap-1.5 text-slate-300">
+          <i data-lucide="cloud-check" class="w-4 h-4 text-emerald-400"></i>
+          100% en la nube (sin descargas)
+        </span>
+      </div>
+
+      <!-- Hero Visual Interactive Mockup: Software & Catalogo -->
+      <div class="mt-14 relative max-w-5xl mx-auto">
+        <div class="absolute -inset-1 bg-gradient-to-r from-brand-blue via-brand-cyan to-emerald-500 rounded-3xl blur-xl opacity-30 group-hover:opacity-100 transition duration-1000 group-hover:duration-200"></div>
+        
+        <div class="relative rounded-2xl glass-panel p-2 sm:p-4 border border-slate-700/80 shadow-2xl bg-brand-surface/90">
+          
+          <!-- Mockup Top Bar -->
+          <div class="flex items-center justify-between pb-3 px-3 border-b border-white/10 text-xs font-mono text-slate-400">
+            <div class="flex items-center gap-2">
+              <span class="w-3 h-3 rounded-full bg-rose-500/80 inline-block"></span>
+              <span class="w-3 h-3 rounded-full bg-amber-500/80 inline-block"></span>
+              <span class="w-3 h-3 rounded-full bg-emerald-500/80 inline-block"></span>
+              <span class="ml-2 font-medium text-slate-300 hidden sm:inline">autoventa-app.com.ar/dashboard</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <span class="flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-[11px] font-bold">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
+                RADAR IA ACTIVO (BS AS / CÓRDOBA / ROSARIO)
+              </span>
+            </div>
+          </div>
+
+          <!-- Inside Platform Preview -->
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 p-3 sm:p-4 text-left">
+            
+            <!-- Left: Catálogo Web Live View (Mobile format) -->
+            <div class="lg:col-span-5 bg-gradient-to-b from-slate-900 to-black rounded-xl p-4 border border-slate-800 shadow-inner flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+                  <div class="flex items-center gap-2">
+                    <div class="w-7 h-7 rounded-lg bg-brand-blue flex items-center justify-center font-black text-xs text-white">MS</div>
+                    <div>
+                      <div class="text-xs font-bold text-white leading-none">Motors Sur Automotores</div>
+                      <div class="text-[10px] text-slate-400 font-mono">catalogo.autoventa.ar/motorsur</div>
+                    </div>
+                  </div>
+                  <span class="text-[10px] px-2 py-0.5 rounded bg-brand-cyan/15 text-brand-cyan font-bold">WEB PROPIA</span>
+                </div>
+
+                <!-- Car Card Example 1 in Catalog -->
+                <div class="mt-3 bg-slate-800/60 rounded-lg p-2.5 border border-slate-700/50">
+                  <div class="relative h-28 w-full rounded-md bg-gradient-to-tr from-slate-900 to-slate-800 overflow-hidden flex items-center justify-center text-slate-600">
+                    <img src="https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?auto=format&fit=crop&w=800&q=80" 
+                         alt="Volkswagen Golf TSI" 
+                         class="w-full h-full object-cover opacity-90 hover:scale-105 transition duration-500">
+                    <span class="absolute top-2 left-2 bg-brand-blue text-white text-[10px] font-bold px-2 py-0.5 rounded shadow">
+                      Seminuevo Certificado
+                    </span>
+                    <span class="absolute top-2 right-2 bg-emerald-500 text-black text-[10px] font-extrabold px-2 py-0.5 rounded">
+                      ANTICIPO $ 9.5M
+                    </span>
+                  </div>
+                  
+                  <div class="mt-2 flex items-start justify-between">
+                    <div>
+                      <h4 class="text-xs font-bold text-white">VW Golf 1.4 TSI Highline DSG</h4>
+                      <p class="text-[10px] text-slate-400 font-mono">2019 • 64.000 km • Automático</p>
+                    </div>
+                    <span class="text-xs font-mono font-bold text-emerald-400">USD 21.800</span>
+                  </div>
+
+                  <a href="https://wa.me/5491123456789?text=Hola!%20Vengo%20del%20cat%C3%A1logo%20por%20el%20VW%20Golf%202019" 
+                     target="_blank" 
+                     class="mt-2.5 w-full py-1.5 px-3 rounded bg-emerald-500/20 hover:bg-emerald-500 text-emerald-400 hover:text-black font-bold text-[11px] flex items-center justify-center gap-1.5 transition">
+                    <i data-lucide="message-circle" class="w-3.5 h-3.5"></i>
+                    Consultar por WhatsApp
+                  </a>
+                </div>
+
+                <!-- Car Card Example 2 in Catalog -->
+                <div class="mt-2.5 bg-slate-800/40 rounded-lg p-2 border border-slate-700/30 flex items-center justify-between">
+                  <div class="flex items-center gap-2">
+                    <div class="w-12 h-10 rounded bg-slate-900 overflow-hidden flex-shrink-0">
+                      <img src="https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&w=300&q=80" 
+                           alt="Toyota Hilux" 
+                           class="w-full h-full object-cover">
+                    </div>
+                    <div>
+                      <div class="text-[11px] font-bold text-white">Toyota Hilux SRV 4x4 2.8</div>
+                      <div class="text-[9px] text-slate-400">2021 • 78.000 km</div>
+                    </div>
+                  </div>
+                  <div class="text-right">
+                    <div class="text-[11px] font-mono font-bold text-emerald-400">USD 33.500</div>
+                    <span class="text-[9px] text-brand-cyan">Disponible</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mt-3 pt-2 border-t border-slate-800 flex items-center justify-between text-[10px] text-slate-400">
+                <span>⚡ Carga ultra rápida en celulares</span>
+                <span class="text-emerald-400 font-semibold">100% Sincronizado</span>
+              </div>
+            </div>
+
+            <!-- Right: Radar IA de Oportunidades & Dashboard Admin -->
+            <div class="lg:col-span-7 flex flex-col justify-between gap-3">
+              
+              <!-- Radar Scanner Live Card -->
+              <div class="bg-slate-900/90 rounded-xl p-4 border border-brand-borderHighlight relative overflow-hidden">
+                <div class="flex items-center justify-between mb-3">
+                  <div class="flex items-center gap-2">
+                    <span class="p-1.5 rounded-lg bg-brand-blue/20 text-brand-cyan">
+                      <i data-lucide="radar" class="w-4 h-4 animate-spin text-brand-cyan" style="animation-duration: 8s;"></i>
+                    </span>
+                    <div>
+                      <h4 class="text-xs font-bold text-white">Radar IA de Precios en Vivo</h4>
+                      <p class="text-[10px] text-slate-400">Escaneando 14.820 publicaciones en Argentina...</p>
+                    </div>
+                  </div>
+                  <span class="text-[10px] px-2 py-0.5 font-mono rounded bg-rose-500/20 text-rose-300 font-bold border border-rose-500/30">
+                    OPORTUNIDAD DETECTADA
+                  </span>
+                </div>
+
+                <!-- Detected Opportunity Alert -->
+                <div class="bg-gradient-to-r from-brand-blue/15 to-transparent border-l-4 border-brand-blue p-3 rounded-r-lg">
+                  <div class="flex items-center justify-between">
+                    <div class="text-xs font-bold text-white flex items-center gap-1.5">
+                      <span>Toyota Corolla 1.8 XEI CVT (2020)</span>
+                    </div>
+                    <span class="text-xs font-mono font-extrabold text-emerald-400 bg-emerald-500/20 px-2 py-0.5 rounded">
+                      -24% VS MERCADO
+                    </span>
+                  </div>
+                  <div class="mt-1 grid grid-cols-3 gap-2 text-[10px] text-slate-300 font-mono">
+                    <div>Valor Publicado: <strong class="text-white">$ 17.200.000</strong></div>
+                    <div>Cotización Promedio: <strong class="text-slate-400">$ 22.800.000</strong></div>
+                    <div class="text-emerald-400 font-bold">Margen: +$ 5.600.000</div>
+                  </div>
+                  <div class="mt-2 flex items-center justify-between text-[10px]">
+                    <span class="text-slate-400">Publicado hace 12 min en CABA • Vendedor particular verificado</span>
+                    <span class="text-brand-cyan font-bold hover:underline cursor-pointer">Ver aviso original &rarr;</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Pre-qualifier WhatsApp simulation widget -->
+              <div class="bg-slate-900/70 rounded-xl p-3 border border-slate-800">
+                <div class="flex items-center justify-between mb-2">
+                  <div class="flex items-center gap-2">
+                    <i data-lucide="shield-check" class="w-4 h-4 text-emerald-400"></i>
+                    <span class="text-xs font-bold text-white">Filtro Anticuriosos en WhatsApp</span>
+                  </div>
+                  <span class="text-[10px] text-slate-400 font-mono">Tiempo ahorrado: ~4 horas/día</span>
+                </div>
+                <div class="space-y-1.5 text-[11px]">
+                  <div class="flex items-start gap-2">
+                    <span class="bg-slate-800 text-slate-400 px-2 py-0.5 rounded font-mono text-[10px]">Cliente</span>
+                    <span class="text-slate-300">"Hola, ¿sigue disponible el Golf? ¿Aceptás permuta por un 2008 con deuda de patentes?"</span>
+                  </div>
+                  <div class="flex items-start gap-2">
+                    <span class="bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded font-mono text-[10px]">Filtro IA</span>
+                    <span class="text-emerald-200">"¡Hola! Sí, está disponible en salón. Para cotizar tu usado indicá modelo, km y si tenés diferencia en efectivo mínima de USD 8.000..."</span>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+
+          <!-- Bottom Status Banner -->
+          <div class="bg-brand-surfaceLight/80 px-4 py-2.5 rounded-b-xl border-t border-white/5 flex flex-wrap items-center justify-between text-xs text-slate-400">
+            <div class="flex items-center gap-2">
+              <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-400"></i>
+              <span>Agencias en Buenos Aires, Córdoba, Santa Fe y Mendoza ya operan con AutoVenta APP</span>
+            </div>
+            <button onclick="openDemoModal()" class="text-brand-cyan font-bold hover:text-white transition flex items-center gap-1">
+              Ver el panel completo en vivo &rarr;
+            </button>
+          </div>
+
+        </div>
+      </div>
+
+    </section>
+
+    <!-- 2. NUEVO PRODUCTO DESTACADO: EL CATÁLOGO WEB B2B 🌐 -->
+    <section id="catalogo-web" class="py-20 md:py-28 relative border-t border-brand-border bg-gradient-to-b from-brand-black via-brand-surface/50 to-brand-black">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <!-- Section Header -->
+        <div class="text-center max-w-3xl mx-auto">
+          <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-brand-cyan/10 border border-brand-cyan/30 text-brand-cyan text-xs font-bold uppercase tracking-wider mb-4">
+            <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+            NUEVO LANZAMIENTO EXCLUSIVO
+          </div>
+          <h2 class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white tracking-tight">
+            Tu Agencia o Lote con <span class="bg-gradient-to-r from-brand-cyan to-brand-blue bg-clip-text text-transparent">Sitio Web Propio y Profesional</span>
+          </h2>
+          <p class="mt-4 text-base sm:text-lg text-slate-300 leading-relaxed">
+            Dejá de mandar fotos sueltas por WhatsApp que se pierden en la galería o links de portales de terceros donde tus clientes ven los autos de la competencia. Dale a tu negocio un catálogo digital de primer nivel con tu propia identidad.
+          </p>
+        </div>
+
+        <!-- 4 Feature Grid Cards -->
+        <div class="mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          
+          <!-- Card 1: Ficha Técnica Completa -->
+          <div class="glass-card rounded-2xl p-6 flex flex-col justify-between">
+            <div>
+              <div class="w-12 h-12 rounded-xl bg-brand-blue/20 border border-brand-blue/40 flex items-center justify-center text-brand-cyan mb-5 shadow-glow-blue">
+                <i data-lucide="file-spreadsheet" class="w-6 h-6"></i>
+              </div>
+              <h3 class="text-lg font-bold text-white mb-2 flex items-center gap-2">
+                Ficha Técnica Completa
+              </h3>
+              <p class="text-sm text-slate-300 leading-relaxed">
+                Galería de fotos en alta resolución, kilometraje verificado, equipamiento, año, tipo de combustible, caja y estado general de la unidad.
+              </p>
+            </div>
+            <div class="mt-6 pt-4 border-t border-slate-800 text-xs font-mono text-slate-400 flex items-center gap-1.5">
+              <i data-lucide="check" class="w-4 h-4 text-emerald-400"></i>
+              Muestra pesos argentinos y USD Blue
+            </div>
+          </div>
+
+          <!-- Card 2: Contacto Directo a tu WhatsApp -->
+          <div class="glass-card rounded-2xl p-6 flex flex-col justify-between">
+            <div>
+              <div class="w-12 h-12 rounded-xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 mb-5 shadow-glow-green">
+                <i data-lucide="message-circle" class="w-6 h-6"></i>
+              </div>
+              <h3 class="text-lg font-bold text-white mb-2 flex items-center gap-2">
+                Contacto Directo a WhatsApp
+              </h3>
+              <p class="text-sm text-slate-300 leading-relaxed">
+                Cada vehículo incluye un botón que abre el chat de WhatsApp con el mensaje prearmado citando exactamente el auto por el que consulta.
+              </p>
+            </div>
+            <div class="mt-6 pt-4 border-t border-slate-800 text-xs font-mono text-slate-400 flex items-center gap-1.5">
+              <i data-lucide="check" class="w-4 h-4 text-emerald-400"></i>
+              Sin intermediarios ni desvíos
+            </div>
+          </div>
+
+          <!-- Card 3: Sincronización Inmediata -->
+          <div class="glass-card rounded-2xl p-6 flex flex-col justify-between">
+            <div>
+              <div class="w-12 h-12 rounded-xl bg-brand-cyan/20 border border-brand-cyan/40 flex items-center justify-center text-brand-cyan mb-5 shadow-glow-cyan">
+                <i data-lucide="refresh-cw" class="w-6 h-6"></i>
+              </div>
+              <h3 class="text-lg font-bold text-white mb-2 flex items-center gap-2">
+                Sincronización en Tiempo Real
+              </h3>
+              <p class="text-sm text-slate-300 leading-relaxed">
+                ¿Vendiste un auto o ajustaste el precio? Lo modificás en tu gestor y en 1 segundo se actualiza automáticamente en tu catálogo web.
+              </p>
+            </div>
+            <div class="mt-6 pt-4 border-t border-slate-800 text-xs font-mono text-slate-400 flex items-center gap-1.5">
+              <i data-lucide="check" class="w-4 h-4 text-emerald-400"></i>
+              Cero desfasaje de inventario
+            </div>
+          </div>
+
+          <!-- Card 4: 100% Celulares y PC -->
+          <div class="glass-card rounded-2xl p-6 flex flex-col justify-between">
+            <div>
+              <div class="w-12 h-12 rounded-xl bg-indigo-500/20 border border-indigo-500/40 flex items-center justify-center text-indigo-400 mb-5">
+                <i data-lucide="smartphone" class="w-6 h-6"></i>
+              </div>
+              <h3 class="text-lg font-bold text-white mb-2 flex items-center gap-2">
+                Diseñado para Móviles
+              </h3>
+              <p class="text-sm text-slate-300 leading-relaxed">
+                El 92% de los compradores en Argentina buscan autos desde el celular. Tu catálogo carga al instante incluso con datos móviles 4G.
+              </p>
+            </div>
+            <div class="mt-6 pt-4 border-t border-slate-800 text-xs font-mono text-slate-400 flex items-center gap-1.5">
+              <i data-lucide="check" class="w-4 h-4 text-emerald-400"></i>
+              Velocidad de carga &lt; 1.2 segundos
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Deep Dive Interactive Banner: Ideal para Agencias con Local y Revendedores Independientes -->
+        <div class="mt-12 glass-panel rounded-2xl p-6 sm:p-10 border border-slate-700/60 bg-gradient-to-r from-slate-900/90 via-brand-surface to-slate-900/90">
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+            <div>
+              <span class="text-xs font-mono uppercase tracking-wider text-brand-blueLight font-bold">EXPERIENCIA B2B EXCLUSIVA</span>
+              <h3 class="text-2xl sm:text-3xl font-extrabold text-white mt-2">
+                ¿Operás con local a la calle o como revendedor independiente?
+              </h3>
+              <p class="mt-4 text-sm sm:text-base text-slate-300 leading-relaxed">
+                Si tenés local físico, el Catálogo Web reemplaza a las desactualizadas listas en papel y te da una vidriera digital 24/7. Y si sos revendedor independiente o "flipper", te da la <strong>presencia institucional y seriedad</strong> necesaria para cerrar ventas de millones de pesos con total confianza.
+              </p>
+              
+              <ul class="mt-6 space-y-3 text-sm text-slate-200">
+                <li class="flex items-center gap-2.5">
+                  <i data-lucide="check-circle" class="w-5 h-5 text-brand-cyan flex-shrink-0"></i>
+                  <span>Tu propio subdominio o dominio personalizado (ej: <code>tuestock.ar</code>)</span>
+                </li>
+                <li class="flex items-center gap-2.5">
+                  <i data-lucide="check-circle" class="w-5 h-5 text-brand-cyan flex-shrink-0"></i>
+                  <span>Filtros instantáneos por Marca, Año, Rango de Precio y Transmisión</span>
+                </li>
+                <li class="flex items-center gap-2.5">
+                  <i data-lucide="check-circle" class="w-5 h-5 text-brand-cyan flex-shrink-0"></i>
+                  <span>Insignias de "Financiación Disponible", "Tomamos Usados" y "Reservado"</span>
+                </li>
+              </ul>
+
+              <div class="mt-8 flex flex-wrap gap-4">
+                <button onclick="openDemoModal()" class="px-6 py-3 rounded-xl bg-brand-blue hover:bg-brand-blueLight text-white font-bold text-sm shadow-glow-blue transition">
+                  Ver Ejemplo de Catálogo en Vivo
+                </button>
+              </div>
+            </div>
+
+            <!-- Preview Graphic: Mobile Showcase mockup -->
+            <div class="relative flex justify-center">
+              <div class="w-full max-w-sm rounded-3xl bg-slate-950 p-3 border-2 border-slate-700 shadow-card-elevated">
+                <div class="rounded-2xl bg-slate-900 p-4 border border-slate-800 text-left">
+                  <!-- Mobile Header -->
+                  <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+                    <span class="text-xs font-bold text-white tracking-tight">AUTOS DEL VALLE</span>
+                    <span class="text-[10px] text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full font-mono">18 Autos en Stock</span>
+                  </div>
+                  
+                  <!-- Filter Pill Carousel -->
+                  <div class="flex gap-1.5 py-2.5 overflow-x-auto text-[10px] text-slate-300 no-scrollbar">
+                    <span class="px-2.5 py-1 rounded-full bg-brand-blue text-white font-semibold">Todos (18)</span>
+                    <span class="px-2.5 py-1 rounded-full bg-slate-800 text-slate-300">Pick-ups (5)</span>
+                    <span class="px-2.5 py-1 rounded-full bg-slate-800 text-slate-300">SUVs (7)</span>
+                    <span class="px-2.5 py-1 rounded-full bg-slate-800 text-slate-300">Hasta USD 15k</span>
+                  </div>
+
+                  <!-- Mockup Item -->
+                  <div class="mt-2 rounded-xl bg-slate-800/80 p-2.5 border border-slate-700">
+                    <div class="h-32 rounded-lg bg-slate-950 overflow-hidden relative">
+                      <img src="https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&w=600&q=80" 
+                           alt="Chevrolet Cruze" 
+                           class="w-full h-full object-cover">
+                      <span class="absolute bottom-2 left-2 bg-slate-900/90 text-white font-mono text-[10px] px-2 py-0.5 rounded">
+                        Nafta 1.4T • 52.000 KM
+                      </span>
+                    </div>
+                    <div class="mt-2 flex items-center justify-between">
+                      <div class="text-xs font-bold text-white">Chevrolet Cruze LTZ 2019</div>
+                      <div class="text-xs font-mono font-bold text-emerald-400">USD 14.900</div>
+                    </div>
+                    <button class="mt-2 w-full py-2 rounded-lg bg-emerald-500 text-black font-extrabold text-xs flex items-center justify-center gap-1.5 shadow">
+                      <i data-lucide="message-circle" class="w-3.5 h-3.5 fill-black"></i>
+                      Consultar por WhatsApp
+                    </button>
+                  </div>
+
+                  <div class="mt-3 text-center text-[10px] text-slate-400">
+                    Tu cliente toca y chatea directamente con vos. Sin intermediarios.
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 3. LA SUITE COMPLETA DE AUTOVENTA APP (PILARES TECNOLÓGICOS) -->
+    <section id="pilares-tecnologicos" class="py-20 md:py-28 relative border-t border-brand-border">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div class="text-center max-w-3xl mx-auto">
+          <span class="text-xs font-mono uppercase tracking-widest text-brand-cyan font-bold">SUITE INTEGRAL B2B</span>
+          <h2 class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white tracking-tight mt-2">
+            La Tecnología que Multiplica la Rentabilidad de tu Agencia
+          </h2>
+          <p class="mt-4 text-base sm:text-lg text-slate-300">
+            AutoVenta APP no es solo una página web; es el sistema operativo completo que resuelve las 3 tareas críticas de todo comerciante automotor en Argentina.
+          </p>
+        </div>
+
+        <div class="mt-16 space-y-12">
+          
+          <!-- Pillar 1: Radar IA de Precios -->
+          <div class="glass-panel rounded-3xl p-6 sm:p-10 border border-brand-borderHighlight grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            <div class="lg:col-span-7">
+              <div class="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-rose-500/10 text-rose-400 text-xs font-mono font-bold mb-3 border border-rose-500/20">
+                <i data-lucide="trending-down" class="w-4 h-4"></i>
+                PILAR 1: COMPRA INTELIGENTE
+              </div>
+              <h3 class="text-2xl sm:text-3xl font-extrabold text-white">
+                Radar IA de Precios: <span class="text-rose-400">Comprá barato antes que la competencia</span>
+              </h3>
+              <p class="mt-4 text-slate-300 text-base leading-relaxed">
+                En el negocio de autos usados, la plata se gana al comprar, no al vender. El Radar IA monitorea 24/7 portales y publicaciones particulares en toda Argentina, alertándote en segundos cuando alguien publica una unidad entre un <strong class="text-white font-semibold">15% y 30% por debajo del valor real de mercado</strong>.
+              </p>
+
+              <div class="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="bg-slate-900/60 p-3.5 rounded-xl border border-slate-800">
+                  <div class="text-brand-cyan font-bold text-sm flex items-center gap-2">
+                    <i data-lucide="bell-ring" class="w-4 h-4"></i>
+                    Alertas Instantáneas
+                  </div>
+                  <p class="text-xs text-slate-400 mt-1">Notificaciones a tu celular antes de que el aviso se vuelva masivo.</p>
+                </div>
+                <div class="bg-slate-900/60 p-3.5 rounded-xl border border-slate-800">
+                  <div class="text-emerald-400 font-bold text-sm flex items-center gap-2">
+                    <i data-lucide="calculator" class="w-4 h-4"></i>
+                    Cálculo de Margen Real
+                  </div>
+                  <p class="text-xs text-slate-400 mt-1">Calcula transferencia, detalles y ganancia neta proyectada.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="lg:col-span-5 bg-slate-950 p-5 rounded-2xl border border-slate-800 shadow-xl">
+              <div class="text-xs font-mono text-slate-400 pb-2 border-b border-slate-800 flex justify-between">
+                <span>RADAR_SCANNER_V3.8</span>
+                <span class="text-emerald-400">STATUS: LIVE</span>
+              </div>
+              <div class="mt-4 space-y-3 font-mono text-xs">
+                <div class="p-3 rounded-lg bg-slate-900 border border-slate-800">
+                  <div class="flex justify-between text-white font-bold">
+                    <span>Peugeot 208 Feline 2021</span>
+                    <span class="text-emerald-400">-21%</span>
+                  </div>
+                  <div class="text-slate-400 text-[11px] mt-1">Publicado: $ 16.5M | Mercado: $ 20.9M</div>
+                  <div class="text-[10px] text-slate-500 mt-1">Detectado hace 4m • Vendedor particular • Córdoba Capital</div>
+                </div>
+                <div class="p-3 rounded-lg bg-slate-900 border border-slate-800 opacity-70">
+                  <div class="flex justify-between text-white font-bold">
+                    <span>Ford Ranger XLT 4x2 2018</span>
+                    <span class="text-emerald-400">-18%</span>
+                  </div>
+                  <div class="text-slate-400 text-[11px] mt-1">Publicado: USD 17.500 | Mercado: USD 21.300</div>
+                  <div class="text-[10px] text-slate-500 mt-1">Detectado hace 19m • Rosario, Santa Fe</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pillar 2: Filtro Pre-Calificador Anticuriosos -->
+          <div class="glass-panel rounded-3xl p-6 sm:p-10 border border-brand-borderHighlight grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            <div class="lg:col-span-5 order-2 lg:order-1 bg-slate-950 p-5 rounded-2xl border border-slate-800 shadow-xl">
+              <div class="flex items-center gap-2 pb-3 border-b border-slate-800">
+                <i data-lucide="message-square-code" class="w-5 h-5 text-emerald-400"></i>
+                <span class="text-xs font-bold text-white font-mono">FLOW_PRECALIFICADOR_ARG</span>
+              </div>
+              <div class="mt-4 space-y-2.5 text-xs">
+                <div class="bg-slate-900 p-2.5 rounded-lg text-slate-300">
+                  <div class="text-[10px] font-mono text-slate-500 mb-1">INTERACCIÓN ENTRANTE</div>
+                  "Hola, ¿cuánto es lo último por la Hilux? ¿Financian el 100%?"
+                </div>
+                <div class="bg-emerald-950/40 border border-emerald-500/30 p-2.5 rounded-lg text-emerald-300">
+                  <div class="text-[10px] font-mono text-emerald-400 mb-1">FILTRO AUTOMÁTICO ACTIVO</div>
+                  "Hola! La Hilux se entrega con un anticipo mínimo de USD 15.000 o tu usado 2017 en adelante. ¿Disponés de ese anticipo o vehículo para permuta?"
+                </div>
+                <div class="bg-brand-blue/10 border border-brand-blue/30 p-2 rounded-lg text-[11px] text-brand-cyan flex items-center justify-between">
+                  <span>Resultado: Si no califica, NO te hace perder tiempo.</span>
+                  <i data-lucide="check" class="w-4 h-4"></i>
+                </div>
+              </div>
+            </div>
+
+            <div class="lg:col-span-7 order-1 lg:order-2">
+              <div class="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-emerald-500/10 text-emerald-400 text-xs font-mono font-bold mb-3 border border-emerald-500/20">
+                <i data-lucide="filter" class="w-4 h-4"></i>
+                PILAR 2: TIEMPO Y PRODUCTIVIDAD
+              </div>
+              <h3 class="text-2xl sm:text-3xl font-extrabold text-white">
+                Filtro Anticuriosos: <span class="text-emerald-400">¡Basta de "¿Sigue disponible?"!</span>
+              </h3>
+              <p class="mt-4 text-slate-300 text-base leading-relaxed">
+                El 80% de los mensajes en redes sociales son curiosos sin dinero o con permutas inviables. AutoVenta APP implementa un asistente inteligente en WhatsApp que califica el presupuesto, método de pago y vehículo en permuta antes de que el contacto llegue a tu teléfono de ventas.
+              </p>
+
+              <ul class="mt-6 space-y-2.5 text-sm text-slate-300">
+                <li class="flex items-center gap-2">
+                  <i data-lucide="check-circle" class="w-4 h-4 text-emerald-400"></i>
+                  <span>Separás al comprador real del curioso que solo pregunta de noche.</span>
+                </li>
+                <li class="flex items-center gap-2">
+                  <i data-lucide="check-circle" class="w-4 h-4 text-emerald-400"></i>
+                  <span>Respuestas inmediatas en segundos, incluso feriados o domingos.</span>
+                </li>
+                <li class="flex items-center gap-2">
+                  <i data-lucide="check-circle" class="w-4 h-4 text-emerald-400"></i>
+                  <span>Tu equipo solo atiende a quien tiene el anticipo o el auto listo para transferir.</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Pillar 3: Gestor Centralizado de Inventario -->
+          <div class="glass-panel rounded-3xl p-6 sm:p-10 border border-brand-borderHighlight grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            <div class="lg:col-span-7">
+              <div class="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-brand-blue/10 text-brand-cyan text-xs font-mono font-bold mb-3 border border-brand-blue/20">
+                <i data-lucide="database" class="w-4 h-4"></i>
+                PILAR 3: CONTROL OPERATIVO
+              </div>
+              <h3 class="text-2xl sm:text-3xl font-extrabold text-white">
+                Gestor Centralizado: <span class="text-brand-cyan">El control de tu lote en la palma de tu mano</span>
+              </h3>
+              <p class="mt-4 text-slate-300 text-base leading-relaxed">
+                Olvidate de las planillas de Excel desactualizadas o de tener que revisar el cuaderno del local. Llevá el registro minucioso de cada vehículo: costo de compra, gastos de chapa, pintura, mecánica, comisiones y margen neto en pesos y dólares.
+              </p>
+
+              <div class="mt-6 flex flex-wrap gap-4 text-xs font-mono text-slate-300">
+                <span class="px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800">
+                  📁 Ficha individual por chasis/patente
+                </span>
+                <span class="px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800">
+                  💵 Registro bimonetario (ARS / USD)
+                </span>
+                <span class="px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800">
+                  ⏱️ Medición de días en stock
+                </span>
+              </div>
+            </div>
+
+            <div class="lg:col-span-5 bg-slate-950 p-5 rounded-2xl border border-slate-800 shadow-xl">
+              <div class="grid grid-cols-2 gap-3 text-center">
+                <div class="bg-slate-900 p-3 rounded-xl border border-slate-800">
+                  <div class="text-xs text-slate-400 font-mono">Stock Activo</div>
+                  <div class="text-2xl font-extrabold text-white mt-1">24 Unidades</div>
+                  <div class="text-[10px] text-emerald-400 mt-0.5">3 reservadas</div>
+                </div>
+                <div class="bg-slate-900 p-3 rounded-xl border border-slate-800">
+                  <div class="text-xs text-slate-400 font-mono">Rotación Promedio</div>
+                  <div class="text-2xl font-extrabold text-brand-cyan mt-1">19 Días</div>
+                  <div class="text-[10px] text-slate-400 mt-0.5">Líder en agilidad</div>
+                </div>
+              </div>
+              <div class="mt-3 bg-slate-900 p-3 rounded-xl border border-slate-800 text-xs text-slate-300">
+                <div class="flex justify-between font-bold text-white mb-1">
+                  <span>Valor Total Lote</span>
+                  <span class="font-mono text-emerald-400">USD 418.000</span>
+                </div>
+                <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+                  <div class="bg-brand-blue h-full w-[75%]"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 4. PROBLEMA VS. SOLUCIÓN (EL DÍA A DÍA EN ARGENTINA) -->
+    <section id="comparativa" class="py-20 md:py-28 relative border-t border-brand-border bg-gradient-to-b from-brand-black to-brand-surface/40">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div class="text-center max-w-3xl mx-auto">
+          <span class="text-xs font-mono uppercase tracking-widest text-slate-400 font-bold">COMPARATIVA DIRECTA</span>
+          <h2 class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white tracking-tight mt-2">
+            El Día a Día en el Mercado Automotor Argentino
+          </h2>
+          <p class="mt-4 text-base sm:text-lg text-slate-300">
+            Compará cómo opera el revendedor tradicional frente al comerciante digitalizado con AutoVenta APP.
+          </p>
+        </div>
+
+        <div class="mt-16 grid grid-cols-1 md:grid-cols-2 gap-8">
+          
+          <!-- Frustración: Modelo Tradicional -->
+          <div class="rounded-3xl p-8 bg-rose-950/20 border border-rose-900/40 relative">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-rose-500/20 text-rose-300 font-mono text-xs font-bold mb-6">
+              <i data-lucide="x-circle" class="w-4 h-4"></i>
+              EL MODELO TRADICIONAL (FRUSTRACIÓN)
+            </div>
+
+            <ul class="space-y-6">
+              <li class="flex items-start gap-3.5">
+                <div class="w-6 h-6 rounded-full bg-rose-500/20 text-rose-400 flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <i data-lucide="x" class="w-4 h-4"></i>
+                </div>
+                <div>
+                  <h4 class="text-base font-bold text-white">Horas perdidas con curiosos de Marketplace</h4>
+                  <p class="text-sm text-slate-400 mt-1">Cientos de mensajes con "¿Sigue disponible?", "¿Me aceptás un ciclomotor y cuotas?", dejando sin atender a quien sí tiene la plata.</p>
+                </div>
+              </li>
+
+              <li class="flex items-start gap-3.5">
+                <div class="w-6 h-6 rounded-full bg-rose-500/20 text-rose-400 flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <i data-lucide="x" class="w-4 h-4"></i>
+                </div>
+                <div>
+                  <h4 class="text-base font-bold text-white">Fotos sueltas y desorden en WhatsApp</h4>
+                  <p class="text-sm text-slate-400 mt-1">Mandar 20 fotos por chat saturando la memoria del cliente, sin ficha técnica clara y con precios desactualizados por la inflación.</p>
+                </div>
+              </li>
+
+              <li class="flex items-start gap-3.5">
+                <div class="w-6 h-6 rounded-full bg-rose-500/20 text-rose-400 flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <i data-lucide="x" class="w-4 h-4"></i>
+                </div>
+                <div>
+                  <h4 class="text-base font-bold text-white">Rehenes de portales caros con comisiones</h4>
+                  <p class="text-sm text-slate-400 mt-1">Pagar abonos elevados en plataformas donde tus autos se mezclan con miles de avisos y el cliente termina comprándole a otro.</p>
+                </div>
+              </li>
+
+              <li class="flex items-start gap-3.5">
+                <div class="w-6 h-6 rounded-full bg-rose-500/20 text-rose-400 flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <i data-lucide="x" class="w-4 h-4"></i>
+                </div>
+                <div>
+                  <h4 class="text-base font-bold text-white">Compras a ciegas o tarde</h4>
+                  <p class="text-sm text-slate-400 mt-1">Enterarte de que vendieron un auto barato a 3 cuadras de tu local cuando ya lo señó otro revendedor.</p>
+                </div>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Eficiencia: Con AutoVenta APP -->
+          <div class="rounded-3xl p-8 bg-brand-surface border-2 border-brand-borderHighlight relative shadow-glow-blue">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-cyan/20 text-brand-cyan font-mono text-xs font-bold mb-6">
+              <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-400"></i>
+              CON AUTOVENTA APP + CATÁLOGO WEB (EFICIENCIA)
+            </div>
+
+            <ul class="space-y-6">
+              <li class="flex items-start gap-3.5">
+                <div class="w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <i data-lucide="check" class="w-4 h-4"></i>
+                </div>
+                <div>
+                  <h4 class="text-base font-bold text-white">Un solo link profesional con todo tu stock</h4>
+                  <p class="text-sm text-slate-300 mt-1">Le enviás al cliente <code>tucatalogo.ar</code> con fotos HD, detalles, anticipos y botón a tu WhatsApp. Imagen 100% corporativa.</p>
+                </div>
+              </li>
+
+              <li class="flex items-start gap-3.5">
+                <div class="w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <i data-lucide="check" class="w-4 h-4"></i>
+                </div>
+                <div>
+                  <h4 class="text-base font-bold text-white">Compradores pre-calificados con dinero listo</h4>
+                  <p class="text-sm text-slate-300 mt-1">El filtro inteligente descarta a los que no tienen el monto requerido y te deriva solo a quienes están listos para señar.</p>
+                </div>
+              </li>
+
+              <li class="flex items-start gap-3.5">
+                <div class="w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <i data-lucide="check" class="w-4 h-4"></i>
+                </div>
+                <div>
+                  <h4 class="text-base font-bold text-white">Marca propia e independencia total</h4>
+                  <p class="text-sm text-slate-300 mt-1">Construís tu propia base de clientes y reputación digital sin pagar comisiones por venta a portales generalistas.</p>
+                </div>
+              </li>
+
+              <li class="flex items-start gap-3.5">
+                <div class="w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <i data-lucide="check" class="w-4 h-4"></i>
+                </div>
+                <div>
+                  <h4 class="text-base font-bold text-white">Radar IA cazando oportunidades 24/7</h4>
+                  <p class="text-sm text-slate-300 mt-1">Recibís alertas directas para comprar autos particulares entre un 15% y 30% más baratos antes que nadie.</p>
+                </div>
+              </li>
+            </ul>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 5. PREGUNTAS FRECUENTES (FAQs B2B - SIN PRECIOS) -->
+    <section id="faqs" class="py-20 md:py-28 relative border-t border-brand-border">
+      <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div class="text-center">
+          <span class="text-xs font-mono uppercase tracking-widest text-brand-cyan font-bold">RESPUESTAS CLARAS</span>
+          <h2 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mt-2">
+            Preguntas Frecuentes
+          </h2>
+          <p class="mt-3 text-slate-400 text-sm sm:text-base">
+            Todo lo que necesitás saber antes de dar el salto tecnológico en tu negocio automotor.
+          </p>
+        </div>
+
+        <div class="mt-12 space-y-4">
+          
+          <!-- FAQ Item 1 -->
+          <div class="glass-panel rounded-2xl border border-slate-800 overflow-hidden transition-all duration-300">
+            <button onclick="toggleFaq(1)" class="w-full px-6 py-5 text-left flex items-center justify-between text-white font-bold text-base focus:outline-none">
+              <span>¿Qué necesito para empezar a usar AutoVenta APP y el Catálogo Web?</span>
+              <i id="faq-icon-1" data-lucide="chevron-down" class="w-5 h-5 text-slate-400 transition-transform duration-300"></i>
+            </button>
+            <div id="faq-content-1" class="hidden px-6 pb-5 text-sm text-slate-300 leading-relaxed border-t border-slate-800/60 pt-3">
+              Solamente un celular o computadora con conexión a internet. AutoVenta APP funciona 100% en la nube; no necesitás descargar programas pesados, ni servidores especiales, ni realizar instalaciones complicadas. Nuestro equipo realiza la configuración inicial y te acompaña paso a paso.
+            </div>
+          </div>
+
+          <!-- FAQ Item 2 -->
+          <div class="glass-panel rounded-2xl border border-slate-800 overflow-hidden transition-all duration-300">
+            <button onclick="toggleFaq(2)" class="w-full px-6 py-5 text-left flex items-center justify-between text-white font-bold text-base focus:outline-none">
+              <span>¿Puedo personalizar el Catálogo Web con la marca de mi agencia?</span>
+              <i id="faq-icon-2" data-lucide="chevron-down" class="w-5 h-5 text-slate-400 transition-transform duration-300"></i>
+            </button>
+            <div id="faq-content-2" class="hidden px-6 pb-5 text-sm text-slate-300 leading-relaxed border-t border-slate-800/60 pt-3">
+              Totalmente. Tu catálogo se adapta con el nombre comercial, logotipo oficial, colores corporativos, ubicación física de tu lote o agencia y todos tus canales de contacto directo (WhatsApp, llamadas, redes sociales y mapa de Google Maps si tenés salón).
+            </div>
+          </div>
+
+          <!-- FAQ Item 3 -->
+          <div class="glass-panel rounded-2xl border border-slate-800 overflow-hidden transition-all duration-300">
+            <button onclick="toggleFaq(3)" class="w-full px-6 py-5 text-left flex items-center justify-between text-white font-bold text-base focus:outline-none">
+              <span>¿Cómo funciona la integración con WhatsApp?</span>
+              <i id="faq-icon-3" data-lucide="chevron-down" class="w-5 h-5 text-slate-400 transition-transform duration-300"></i>
+            </button>
+            <div id="faq-content-3" class="hidden px-6 pb-5 text-sm text-slate-300 leading-relaxed border-t border-slate-800/60 pt-3">
+              Los clientes que navegan tu catálogo web o ingresan por tus publicaciones tocan un botón de contacto y se activa la interacción en WhatsApp. El sistema puede responder de forma automática con el filtro pre-calificador o derivarlo directamente y sin intermediarios al número del vendedor asignado con el vehículo exacto ya identificado.
+            </div>
+          </div>
+
+          <!-- FAQ Item 4 -->
+          <div class="glass-panel rounded-2xl border border-slate-800 overflow-hidden transition-all duration-300">
+            <button onclick="toggleFaq(4)" class="w-full px-6 py-5 text-left flex items-center justify-between text-white font-bold text-base focus:outline-none">
+              <span>¿Cómo puedo solicitar una demostración del software?</span>
+              <i id="faq-icon-4" data-lucide="chevron-down" class="w-5 h-5 text-slate-400 transition-transform duration-300"></i>
+            </button>
+            <div id="faq-content-4" class="hidden px-6 pb-5 text-sm text-slate-300 leading-relaxed border-t border-slate-800/60 pt-3">
+              Es muy simple. Tocá el botón de <strong class="text-white">"Ver Demostración en Vivo"</strong> o escribinos por WhatsApp. Coordinaremos una videollamada personalizada de 15 minutos donde te mostraremos en vivo cómo cargar tus autos, cómo funciona el Radar IA en tu zona y cómo se verá tu propio Catálogo Web en funcionamiento.
+            </div>
+          </div>
+
+          <!-- FAQ Item 5: Mercado Argentino (Precios / Monedas) -->
+          <div class="glass-panel rounded-2xl border border-slate-800 overflow-hidden transition-all duration-300">
+            <button onclick="toggleFaq(5)" class="w-full px-6 py-5 text-left flex items-center justify-between text-white font-bold text-base focus:outline-none">
+              <span>¿Cómo maneja la plataforma los precios en Pesos y Dólar Blue?</span>
+              <i id="faq-icon-5" data-lucide="chevron-down" class="w-5 h-5 text-slate-400 transition-transform duration-300"></i>
+            </button>
+            <div id="faq-content-5" class="hidden px-6 pb-5 text-sm text-slate-300 leading-relaxed border-t border-slate-800/60 pt-3">
+              AutoVenta APP está 100% pensada para la realidad financiera de Argentina. Podés fijar el precio de cada auto en Dólares (USD) o Pesos (ARS), configurar anticipos en pesos con cuotas y ajustar cotizaciones en lote en segundos frente a cualquier variación del mercado.
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 6. SECCIÓN FINAL / FOOTER CON CTA -->
+    <section class="py-20 md:py-28 relative border-t border-brand-border bg-gradient-to-b from-brand-surface to-brand-black overflow-hidden">
+      
+      <!-- Background Ambient Glow -->
+      <div class="absolute inset-0 pointer-events-none">
+        <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-brand-blue/20 rounded-full blur-[140px]"></div>
+      </div>
+
+      <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+        
+        <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-brand-blue to-brand-cyan flex items-center justify-center mx-auto mb-6 shadow-glow-blue">
+          <i data-lucide="rocket" class="w-8 h-8 text-white"></i>
+        </div>
+
+        <h2 class="text-3xl sm:text-5xl md:text-6xl font-extrabold text-white tracking-tight leading-tight">
+          Llevá tu negocio automotor al <br class="hidden sm:inline">
+          <span class="bg-gradient-to-r from-brand-cyan via-white to-brand-blueLight bg-clip-text text-transparent">
+            siguiente nivel tecnológico
+          </span>
+        </h2>
+
+        <p class="mt-6 text-base sm:text-xl text-slate-300 max-w-2xl mx-auto font-normal leading-relaxed">
+          Agendá una demo y conocé cómo AutoVenta APP y el nuevo Catálogo Web pueden potenciar tus ventas y ordenar tu lote hoy mismo.
+        </p>
+
+        <!-- Final CTAs -->
+        <div class="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
+          <a href="https://wa.me/5491123456789?text=Hola!%20Quiero%20hablar%20con%20un%20asesor%20comercial%20de%20AutoVenta%20APP%20y%20agendar%20una%20demostraci%C3%B3n" 
+             target="_blank" 
+             rel="noopener noreferrer"
+             class="w-full sm:w-auto px-9 py-5 rounded-xl text-base sm:text-lg font-extrabold bg-emerald-500 hover:bg-emerald-400 text-black shadow-glow-green transition-all duration-300 flex items-center justify-center gap-3 transform hover:scale-[1.02] active:scale-[0.98]">
+            <i data-lucide="message-circle" class="w-6 h-6 fill-black"></i>
+            <span>HABLAR CON UN ASESOR POR WHATSAPP</span>
+          </a>
+
+          <button onclick="openDemoModal()" 
+                  class="w-full sm:w-auto px-8 py-5 rounded-xl text-base sm:text-lg font-bold bg-slate-900 hover:bg-slate-800 text-white border border-slate-700 transition-all flex items-center justify-center gap-2.5">
+            <i data-lucide="calendar" class="w-5 h-5 text-brand-cyan"></i>
+            <span>Agendar Demo Virtual</span>
+          </button>
+        </div>
+
+        <div class="mt-8 text-xs text-slate-400 font-mono flex items-center justify-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+          <span>Atención comercial activa de Lunes a Sábados de 9 a 20 hs (Argentina)</span>
+        </div>
+
+      </div>
+
+      <!-- FOOTER BOTTOM -->
+      <footer class="mt-20 pt-8 border-t border-slate-800/80 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-xs text-slate-500 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div class="flex items-center gap-2">
+          <span class="font-bold text-slate-300">AutoVenta APP</span>
+          <span>•</span>
+          <span>Tecnología B2B para Agencias y Revendedores</span>
+          <span>•</span>
+          <span>Argentina 🇦🇷</span>
+        </div>
+        <div class="flex items-center gap-6">
+          <a href="#catalogo-web" class="hover:text-slate-300 transition">Catálogo Web</a>
+          <a href="#pilares-tecnologicos" class="hover:text-slate-300 transition">Pilares</a>
+          <a href="#faqs" class="hover:text-slate-300 transition">FAQs</a>
+          <span class="text-slate-600">© 2026 AutoVenta APP. Todos los derechos reservados.</span>
+        </div>
+      </footer>
+
+    </section>
+
+  </main>
+
+  <!-- FLOATING WHATSAPP BUTTON (ARGENTINA FOCUS) -->
+  <aside aria-label="Contacto flotante WhatsApp" class="fixed bottom-6 right-6 z-40">
+    <a href="https://wa.me/5491123456789?text=Hola!%20Quiero%20consultar%20por%20AutoVenta%20APP%20y%20el%20Cat%C3%A1logo%20Web%20B2B" 
+       target="_blank" 
+       rel="noopener noreferrer"
+       class="relative group flex items-center justify-center w-14 h-14 rounded-full bg-emerald-500 hover:bg-emerald-400 text-black shadow-glow-green transition-all duration-300 transform hover:scale-110 active:scale-95"
+       title="Consultar por WhatsApp">
+      
+      <!-- Notification Ping -->
+      <span class="absolute -top-1 -right-1 flex h-4 w-4">
+        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+        <span class="relative inline-flex rounded-full h-4 w-4 bg-emerald-300"></span>
+      </span>
+
+      <i data-lucide="message-circle" class="w-7 h-7 fill-black"></i>
+
+      <!-- Tooltip on hover -->
+      <span class="absolute right-16 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-700 text-white text-xs font-semibold whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none shadow-lg">
+        ¿Tenés dudas? Chateá con nosotros
+      </span>
+    </a>
+  </aside>
+
+  <!-- MODAL: AGENDAR DEMOSTRACIÓN EN VIVO (B2B SIN PRECIOS) -->
+  <div id="demo-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/80 backdrop-blur-md transition-opacity duration-300">
+    <div class="relative w-full max-w-lg rounded-2xl glass-panel p-6 sm:p-8 border border-brand-borderHighlight shadow-2xl bg-brand-surface">
+      
+      <!-- Close button -->
+      <button onclick="closeDemoModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white p-2 rounded-lg hover:bg-slate-800 transition">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+
+      <!-- Modal Header -->
+      <div class="text-left">
+        <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-brand-blue/20 text-brand-cyan text-xs font-mono font-bold">
+          <i data-lucide="video" class="w-3.5 h-3.5"></i>
+          DEMO EN VIVO 1 A 1
+        </div>
+        <h3 class="text-xl sm:text-2xl font-extrabold text-white mt-2">
+          Agendá tu Demostración de AutoVenta APP
+        </h3>
+        <p class="text-xs sm:text-sm text-slate-300 mt-1">
+          Te mostraremos en vivo cómo funciona el Catálogo Web, el Radar IA y cómo gestionar tu inventario sin complicaciones.
+        </p>
+      </div>
+
+      <!-- Lead Capture Form -->
+      <form id="demo-form" onsubmit="handleDemoSubmit(event)" class="mt-6 space-y-4 text-left">
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1">Nombre y Apellido *</label>
+          <input type="text" required placeholder="Ej: Mariano Rossi" 
+                 class="w-full px-3.5 py-2.5 rounded-xl bg-slate-900/90 border border-slate-700 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-brand-blue transition">
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1">Nombre de la Agencia / Lote / Negocio *</label>
+          <input type="text" required placeholder="Ej: Rossi Automotores / Revendedor Independiente" 
+                 class="w-full px-3.5 py-2.5 rounded-xl bg-slate-900/90 border border-slate-700 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-brand-blue transition">
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 mb-1">Localidad y Provincia *</label>
+            <input type="text" required placeholder="Ej: Rosario, Santa Fe" 
+                   class="w-full px-3.5 py-2.5 rounded-xl bg-slate-900/90 border border-slate-700 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-brand-blue transition">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 mb-1">WhatsApp de Contacto *</label>
+            <input type="tel" required placeholder="Ej: 11 4567 8900" 
+                   class="w-full px-3.5 py-2.5 rounded-xl bg-slate-900/90 border border-slate-700 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-brand-blue transition">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1">Stock promedio aproximado</label>
+          <select class="w-full px-3.5 py-2.5 rounded-xl bg-slate-900/90 border border-slate-700 text-white text-sm focus:outline-none focus:border-brand-blue transition">
+            <option value="1-5">1 a 5 vehículos (Revendedor independiente)</option>
+            <option value="6-15" selected>6 a 15 vehículos</option>
+            <option value="16-30">16 a 30 vehículos</option>
+            <option value="30+">Más de 30 vehículos</option>
+          </select>
+        </div>
+
+        <button type="submit" 
+                class="w-full py-3.5 px-4 rounded-xl bg-brand-blue hover:bg-brand-blueLight text-white font-bold text-sm shadow-glow-blue transition duration-200 flex items-center justify-center gap-2">
+          <span>COORDINAR DEMO VIRTUAL POR WHATSAPP</span>
+          <i data-lucide="arrow-right" class="w-4 h-4"></i>
+        </button>
+
+        <p class="text-[11px] text-center text-slate-400">
+          🔒 Tus datos están protegidos. No enviamos spam ni compartimos información.
+        </p>
+      </form>
+
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT LOGIC -->
+  <script>
+    // Initialize Lucide Icons
+    lucide.createIcons();
+
+    // Modal Handlers
+    function openDemoModal() {
+      const modal = document.getElementById('demo-modal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeDemoModal() {
+      const modal = document.getElementById('demo-modal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    // Close modal on click outside
+    window.addEventListener('click', function(event) {
+      const modal = document.getElementById('demo-modal');
+      if (event.target === modal) {
+        closeDemoModal();
+      }
+    });
+
+    // Form Submit Handler
+    function handleDemoSubmit(event) {
+      event.preventDefault();
+      const form = event.target;
+      const nombre = form.elements[0].value;
+      const agencia = form.elements[1].value;
+      const localidad = form.elements[2].value;
+      const whatsapp = form.elements[3].value;
+      const stock = form.elements[4].value;
+
+      const message = `Hola! Quiero coordinar una demostración en vivo de AutoVenta APP:%0A%0A` +
+                      `👤 *Nombre:* ${encodeURIComponent(nombre)}%0A` +
+                      `🏢 *Agencia/Negocio:* ${encodeURIComponent(agencia)}%0A` +
+                      `📍 *Ubicación:* ${encodeURIComponent(localidad)}%0A` +
+                      `📱 *WhatsApp:* ${encodeURIComponent(whatsapp)}%0A` +
+                      `🚗 *Stock promedio:* ${encodeURIComponent(stock)}`;
+
+      // Redirect to WhatsApp with pre-filled message
+      window.open(`https://wa.me/5491123456789?text=${message}`, '_blank');
+      closeDemoModal();
+    }
+
+    // FAQ Accordion Handler
+    function toggleFaq(id) {
+      const content = document.getElementById(`faq-content-${id}`);
+      const icon = document.getElementById(`faq-icon-${id}`);
+
+      if (content.classList.contains('hidden')) {
+        content.classList.remove('hidden');
+        icon.classList.add('rotate-180');
+      } else {
+        content.classList.add('hidden');
+        icon.classList.remove('rotate-180');
+      }
+    }
+  </script>
+
+</body>
+</html>
