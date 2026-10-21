@@ -4,9 +4,11 @@ Landing page comercial e informativa de alta conversión para **AutoVenta APP**,
 
 ---
 
-## 🌐 Sitio Web en Vivo (Hosteado)
+## 🌐 Enlaces en Vivo (Hosteados)
 
-👉 **[https://tomasfossatti.github.io/landig-autoventa/](https://tomasfossatti.github.io/landig-autoventa/)**
+- ⚡ **Dominio Corto:** **[https://autoventa.surge.sh](https://autoventa.surge.sh)** *(o también [https://autoventa-app.surge.sh](https://autoventa-app.surge.sh))*
+- 🐙 **GitHub Pages:** **[https://tomasfossatti.github.io/landig-autoventa/](https://tomasfossatti.github.io/landig-autoventa/)**
+- 🚀 **Desplegar en Vercel (1 Clic):** [Click aquí para importar y desplegar en Vercel](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Ftomasfossatti%2Flandig-autoventa&project-name=autoventa)
 
 ---
 
